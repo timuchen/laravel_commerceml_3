@@ -1,0 +1,19 @@
+{
+    "name": "timuchen/laravel_commerceml_3",
+    "description": "Implementation of 1C data exchange with Laravel.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Timuchen\\LaravelCommerceml3\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Timofey Tkachev",
+            "email": "ttkacheff@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
