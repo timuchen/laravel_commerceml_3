@@ -1,6 +1,6 @@
 <?php
 
-namespace Timuchen\LaravelCommerceml3;
+namespace Timuchen\LaravelCommerceml3\Http\Controllers\Traits;
 
 use App;
 use Exception;
