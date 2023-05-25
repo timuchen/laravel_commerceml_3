@@ -1,11 +1,4 @@
 <?php
-/**
- * Filename.php
- * Date: 19.05.2017
- * Time: 11:03
- * Author: Maksim Klimenko
- * Email: mavsan@gmail.com
- */
 
 namespace Timuchen\LaravelCommerceml3\Model;
 
@@ -152,9 +145,9 @@ class FileName
     {
         $ext = $this->script_ext;
 
-        $filename = $this->getProcessFileName();
+        $filetype = $this->getProcessFileName();
 
-        $arParts = explode(".", $filename);
+        $arParts = explode(".", $filetype);
         foreach ($arParts as $i => $part) {
             if ($i > 0
                 && in_array(mb_strtolower($this->trimUnsafe($part)), $ext)

@@ -243,14 +243,14 @@ class CatalogController extends BaseController
     protected function init($type)
     {
         $zip = "zip=".($this->canUseZip() ? 'yes' : 'no');
-        $limit = config('configExchange1C.maxFileSize');
+        $limit = "file_limit=".config('configExchange1C.maxFileSize');
         $answer = "$zip\n$limit";
 
         if (config('configExchange1C.isBitrixOn1C', false)) {
             if ($type === 'catalog' || $type === 'sale') {
                 $answer .=
-                    "\n".Session::getId().
-                    "\n".config('configExchange1C.catalogXmlVersion');
+                    "\nsessid=".Session::getId().
+                    "\nversion=".config('configExchange1C.catalogXmlVersion');
             }
         }
 
@@ -374,13 +374,13 @@ class CatalogController extends BaseController
      */
     protected function clearInputPath($currentFolder)
     {
-        $storePath = config('configExchange1C.inputPath');
-
-        foreach (File::directories($storePath) as $path) {
-            if (File::basename($path) != $currentFolder) {
-                File::deleteDirectory($path);
-            }
-        }
+//        $storePath = config('configExchange1C.inputPath');
+//
+//        foreach (File::directories($storePath) as $path) {
+//            if (File::basename($path) != $currentFolder) {
+//                File::deleteDirectory($path);
+//            }
+//        }
     }
 
     /**

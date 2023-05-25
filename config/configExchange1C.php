@@ -19,7 +19,7 @@ return [
     'catalogWorkModel'   => '',
     'saleShareModel'     => '',
 
-    'encodeToWindows1251' => false,
+    'encodeToWindows1251' => true,
 
     'saleShareToXML'     => '',
 
