@@ -63,6 +63,12 @@ trait ImportCML{
 //        $category = $parseCML->getCollection('category');
 //        return dd($category);
 
+        $fullPath = $this->getFullPathToFile($fileName);
+        $parseCML = new CommerceML();
+        $parseCML->addXmls($fileName, $fullPath);
+        $product = $parseCML->getCollection('product');
+        return dd($product);
+
         /** @var Import $model */
         $model = $this->getImportModel();
         if (! $model instanceof Import) {

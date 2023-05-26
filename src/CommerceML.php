@@ -2,9 +2,11 @@
 
 namespace Timuchen\LaravelCommerceml3;
 
-use Timuchen\LaravelCommerceml3\ORM\Collection;
 use Timuchen\LaravelCommerceml3\Model\Category;
 use Timuchen\LaravelCommerceml3\Model\CategoryCollection;
+use Timuchen\LaravelCommerceml3\Model\Product;
+use Timuchen\LaravelCommerceml3\Model\ProductCollection;
+use Timuchen\LaravelCommerceml3\ORM\Collection;
 
 class CommerceML {
 
@@ -13,7 +15,7 @@ class CommerceML {
     public function __construct(){
         $this->collections = [
             'category'      => new CategoryCollection(),
-            'product',
+            'product'       => new ProductCollection(),
             'priceType',
             'property'
         ];
@@ -30,7 +32,7 @@ class CommerceML {
 
         if ($fileType == "groups") {
             $fileXML = $this->loadXml($filePuth);
-            return $this->parseCategories($fileXML);
+            $this->parseCategories($fileXML);
         }
 
         if ($fileType == "offers") {
@@ -106,8 +108,8 @@ class CommerceML {
         if ($offersXml) {
             if ($offersXml->ПакетПредложений->Предложения) {
                 foreach ($offersXml->ПакетПредложений->Предложения->Предложение as $offer) {
-                    $productId                               = (string)$offer->Ид;
-                    $buffer['products'][$productId]['offer'] = $offer;
+                    $offerId = (string)$offer->Ид;
+                    $buffer['products'][$offerId]['offer'] = $offer;
                 }
             }
         }
