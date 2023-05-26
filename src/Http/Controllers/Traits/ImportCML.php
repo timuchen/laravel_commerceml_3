@@ -63,10 +63,28 @@ trait ImportCML{
 //        $category = $parseCML->getCollection('category');
 //        return dd($category);
 
+//        $fullPath = $this->getFullPathToFile($fileName);
+//        $parseCML = new CommerceML();
+//        $parseCML->addXmls($fileName, $fullPath);
+//        $product = $parseCML->getCollection('product');
+//        return dd($product);
+//
+//        $fullPath = $this->getFullPathToFile($fileName);
+//        $parseCML = new CommerceML();
+//        $parseCML->addXmls($fileName, $fullPath);
+//        $product = $parseCML->getCollection('priceType');
+//        return dd($product);
+
+//        $fullPath = $this->getFullPathToFile($fileName);
+//        $parseCML = new CommerceML();
+//        $parseCML->addXmls($fileName, $fullPath);
+//        $product = $parseCML->getCollection('properties_offers');
+//        return dd($product);
+
         $fullPath = $this->getFullPathToFile($fileName);
         $parseCML = new CommerceML();
         $parseCML->addXmls($fileName, $fullPath);
-        $product = $parseCML->getCollection('product');
+        $product = $parseCML->getCollection('prices');
         return dd($product);
 
         /** @var Import $model */

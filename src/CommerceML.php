@@ -6,7 +6,12 @@ use Timuchen\LaravelCommerceml3\Model\Category;
 use Timuchen\LaravelCommerceml3\Model\CategoryCollection;
 use Timuchen\LaravelCommerceml3\Model\Product;
 use Timuchen\LaravelCommerceml3\Model\ProductCollection;
-use Timuchen\LaravelCommerceml3\ORM\Collection;
+use Timuchen\LaravelCommerceml3\Model\PriceType;
+use Timuchen\LaravelCommerceml3\Model\PriceTypeCollection;
+use Timuchen\LaravelCommerceml3\Model\Property;
+use Timuchen\LaravelCommerceml3\Model\PropertyCollection;
+use Timuchen\LaravelCommerceml3\Model\Price;
+use Timuchen\LaravelCommerceml3\Model\PriceCollection;
 
 class CommerceML {
 
@@ -14,10 +19,12 @@ class CommerceML {
 
     public function __construct(){
         $this->collections = [
-            'category'      => new CategoryCollection(),
-            'product'       => new ProductCollection(),
-            'priceType',
-            'property'
+            'categories'      => new CategoryCollection(),
+            'products'       => new ProductCollection(),
+            'price_types'    => new PriceTypeCollection(),
+            'properties_products'      => new PropertyCollection(),
+            'properties_offers'        => new PropertyCollection(),
+            'prices'         => new PriceCollection()
         ];
     }
 
@@ -25,14 +32,14 @@ class CommerceML {
     {
         $fileType = stristr($fileName, "_", true);
 
-        if ($fileType == "goods") {
-            $fileXML = $this->loadXml($filePuth);
-            $this->parseProducts($fileXML, false);
-        }
-
         if ($fileType == "groups") {
             $fileXML = $this->loadXml($filePuth);
             $this->parseCategories($fileXML);
+        }
+
+        if ($fileType == "goods") {
+            $fileXML = $this->loadXml($filePuth);
+            $this->parseProducts($fileXML, false);
         }
 
         if ($fileType == "offers") {
@@ -52,12 +59,12 @@ class CommerceML {
 
         if ($fileType == "propertiesGoods") {
             $fileXML = $this->loadXml($filePuth);
-            $this->parsePropertiesGoods($fileXML);
+            $this->parseProperties($fileXML, false);
         }
 
         if ($fileType == "propertiesOffers") {
             $fileXML = $this->loadXml($filePuth);
-            $this->parsePropertiesOffers($fileXML);
+            $this->parseProperties(false, $fileXML);
         }
 
         if ($fileType == "units") {
@@ -66,7 +73,6 @@ class CommerceML {
         }
 
     }
-
 
     public function parseCategories($groupsXml, $parent = null)
     {
@@ -82,7 +88,7 @@ class CommerceML {
                 $parent->addChild($category);
             }
 
-            $this->getCollection("category")->add($category);
+            $this->getCollection('categories')->add($category);
 
             if ($xmlCategory->Группы) {
                 $this->parseCategories($xmlCategory->Группы, $category);
@@ -93,14 +99,14 @@ class CommerceML {
     public function parseProducts($goodsXml = false, $offersXml = false)
     {
         $buffer = [
-            'products' => []
+            'product' => []
         ];
 
         if ($goodsXml) {
             if ($goodsXml->Каталог->Товары) {
                 foreach ($goodsXml->Каталог->Товары->Товар as $product) {
                     $productId = (string)$product->Ид;
-                    $buffer['products'][$productId]['import'] = $product;
+                    $buffer['product'][$productId]['import'] = $product;
                 }
             }
         }
@@ -109,38 +115,44 @@ class CommerceML {
             if ($offersXml->ПакетПредложений->Предложения) {
                 foreach ($offersXml->ПакетПредложений->Предложения->Предложение as $offer) {
                     $offerId = (string)$offer->Ид;
-                    $buffer['products'][$offerId]['offer'] = $offer;
+                    $buffer['product'][$offerId]['offer'] = $offer;
                 }
             }
         }
 
-        foreach ($buffer['products'] as $item) {
+        foreach ($buffer['product'] as $item) {
             $import = isset($item['import']) ? $item['import'] : null;
             $offer  = isset($item['offer']) ? $item['offer'] : null;
 
             $product = new Product($import, $offer);
-            $this->getCollection('product')->add($product);
+            $this->getCollection('products')->add($product);
         }
     }
 
-    public function parsePriceTypes($offersXml)
+    public function parsePriceTypes($priceListXml)
     {
-        if ($offersXml->ПакетПредложений->ТипыЦен) {
-            foreach ($offersXml->ПакетПредложений->ТипыЦен->ТипЦены as $xmlPriceType) {
+        if ($priceListXml->Классификатор->ТипыЦен) {
+            foreach ($priceListXml->Классификатор->ТипыЦен->ТипЦены as $xmlPriceType) {
                 $priceType = new PriceType($xmlPriceType);
-                $this->getCollection('priceType')->add($priceType);
+                $this->getCollection('price_types')->add($priceType);
             }
         }
     }
 
-    public function parseProperties($importXml)
+    public function parseProperties($goodsXml = false, $offersXml = false)
     {
-        if ($importXml->Классификатор->Свойства) {
-            foreach ($importXml->Классификатор->Свойства->Свойство as $xmlProperty) {
+        if ($goodsXml) {
+            foreach ($goodsXml->Классификатор->Свойства->Свойство as $xmlProperty) {
                 $property = new Property($xmlProperty);
-                $this->getCollection('property')->add($property);
+                $this->getCollection('properties_products')->add($property);
             }
+        }
 
+        if ($offersXml) {
+            foreach ($offersXml->Классификатор->Свойства->Свойство as $xmlProperty) {
+                $property = new Property($xmlProperty);
+                $this->getCollection('properties_offers')->add($property);
+            }
         }
     }
 
