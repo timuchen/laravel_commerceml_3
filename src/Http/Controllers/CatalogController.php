@@ -14,6 +14,7 @@ use Session;
 use Timuchen\LaravelCommerceml3\Http\Controllers\Traits\ImportCML;
 use Timuchen\LaravelCommerceml3\Model\FileName;
 
+
 class CatalogController extends BaseController
 {
     /** @var  Request */

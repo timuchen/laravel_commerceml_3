@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Timuchen\LaravelCommerceml3\Model;
 
 use Timuchen\LaravelCommerceml3\ORM\Model;
@@ -48,21 +50,18 @@ class Product extends Model
 
     public function loadImport($xml)
     {
-
-        $this->id          = trim($xml->Ид);
-        $this->name        = trim($xml->Наименование);
-        $this->description = trim($xml->Описание);
-        $this->delete      = trim($xml->ПометкаУдаления);
-        $this->sku         = trim($xml->Артикул);
-        $this->unit        = trim($xml->БазоваяЕдиница);
-        $this->barcode     = trim($xml->Штрихкод);
-        $this->country     = trim($xml->Страна);
-        $this->width       = trim($xml->Ширина);
-        $this->length      = trim($xml->Длина);
-        $this->height      = trim($xml->Высота);
-        $this->version     = trim($xml->НомерВерсии);
-
-
+        $this->id          = (string) $xml->Ид;
+        $this->name        = (string) $xml->Наименование;
+        $this->description = (string) $xml->Описание;
+        $this->delete      = (string) $xml->ПометкаУдаления;
+        $this->sku         = (string) $xml->Артикул;
+        $this->unit        = (string) $xml->БазоваяЕдиница;
+        $this->barcode     = (string) $xml->Штрихкод;
+        $this->country     = (string) $xml->Страна;
+        $this->width       = (string) $xml->Ширина;
+        $this->length      = (string) $xml->Длина;
+        $this->height      = (string) $xml->Высота;
+        $this->version     = (string) $xml->НомерВерсии;
 
         if ($xml->Группы) {
             foreach ($xml->Группы->Ид as $categoryId) {

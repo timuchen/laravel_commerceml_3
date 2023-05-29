@@ -12,19 +12,22 @@ use Timuchen\LaravelCommerceml3\Model\Property;
 use Timuchen\LaravelCommerceml3\Model\PropertyCollection;
 use Timuchen\LaravelCommerceml3\Model\Price;
 use Timuchen\LaravelCommerceml3\Model\PriceCollection;
+use Timuchen\LaravelCommerceml3\Model\Unit;
+use Timuchen\LaravelCommerceml3\Model\UnitCollection;
 
 class CommerceML {
 
-    protected $collections = [];
+    public $collections = [];
 
     public function __construct(){
         $this->collections = [
-            'categories'      => new CategoryCollection(),
+            'categories'     => new CategoryCollection(),
             'products'       => new ProductCollection(),
             'price_types'    => new PriceTypeCollection(),
-            'properties_products'      => new PropertyCollection(),
-            'properties_offers'        => new PropertyCollection(),
-            'prices'         => new PriceCollection()
+            'offer_prices'   => new PriceCollection(),
+            'properties_products'   => new PropertyCollection(),
+            'properties_offers'     => new PropertyCollection(),
+            'units'          => new UnitCollection(),
         ];
     }
 
@@ -68,7 +71,7 @@ class CommerceML {
         }
 
         if ($fileType == "units") {
-            $fileXML = $this->loadXml($fileName);
+            $fileXML = $this->loadXml($filePuth);
             $this->parseUnits($fileXML);
         }
 
@@ -137,6 +140,26 @@ class CommerceML {
                 $this->getCollection('price_types')->add($priceType);
             }
         }
+    }
+
+    public function parsePrices($pricesXml)
+    {
+
+        if ($pricesXml->ПакетПредложений->Предложения){
+            foreach ($pricesXml->ПакетПредложений->Предложения->Предложение as $xmlPrice){
+                $price = new Price($xmlPrice);
+                $this->getCollection('offer_prices')->add($price);
+            }
+        }
+    }
+
+    public function parseUnits($unitsXml){
+
+            foreach ($unitsXml->Классификатор->ЕдиницыИзмерения->ЕдиницаИзмерения as $xmlUnit){
+                $unit = new Unit($xmlUnit);
+                $this->getCollection('units')->add($unit);
+            }
+
     }
 
     public function parseProperties($goodsXml = false, $offersXml = false)

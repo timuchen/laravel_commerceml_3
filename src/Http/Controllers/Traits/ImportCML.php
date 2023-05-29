@@ -12,6 +12,9 @@ use Timuchen\LaravelCommerceml3\Interfaces\ImportBitrix;
 use Timuchen\LaravelCommerceml3\Model\FileName;
 use Timuchen\LaravelCommerceml3\CommerceML;
 
+use App\Models\Category;
+use App\Models\Product;
+
 trait ImportCML{
 
     protected function getImportModel()
@@ -57,35 +60,65 @@ trait ImportCML{
                 .$this->request->get('filename'));
         }
 
-//        $fullPath = $this->getFullPathToFile($fileName);
-//        $parseCML = new CommerceML();
-//        $parseCML->addXmls($fileName, $fullPath);
-//        $category = $parseCML->getCollection('category');
-//        return dd($category);
+        $fullPath = $this->getFullPathToFile($fileName);
 
-//        $fullPath = $this->getFullPathToFile($fileName);
-//        $parseCML = new CommerceML();
-//        $parseCML->addXmls($fileName, $fullPath);
-//        $product = $parseCML->getCollection('product');
-//        return dd($product);
-//
-//        $fullPath = $this->getFullPathToFile($fileName);
-//        $parseCML = new CommerceML();
-//        $parseCML->addXmls($fileName, $fullPath);
-//        $product = $parseCML->getCollection('priceType');
-//        return dd($product);
+        if (! File::isFile($fullPath)) {
+            return $this->failure('Mode: '.$this->stepImport.', file '
+                .$fullPath
+                .' not exists');
+        }
 
-//        $fullPath = $this->getFullPathToFile($fileName);
-//        $parseCML = new CommerceML();
-//        $parseCML->addXmls($fileName, $fullPath);
-//        $product = $parseCML->getCollection('properties_offers');
-//        return dd($product);
-
+        $fileType = stristr($fileName, "_", true);
         $fullPath = $this->getFullPathToFile($fileName);
         $parseCML = new CommerceML();
         $parseCML->addXmls($fileName, $fullPath);
-        $product = $parseCML->getCollection('prices');
-        return dd($product);
+
+        if ($fileType == 'groups') {
+            $category = $parseCML->getCollection('categories')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+        if ($fileType == "goods") {
+            $products = $parseCML->getCollection('products');
+            $dbProduct = new Product();
+            $dbProduct->createModel1c($products);
+        }
+
+        if ($fileType == "offers") {
+            $category = $parseCML->getCollection('products');
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+
+        if ($fileType == "priceLists") {
+            $category = $parseCML->getCollection('price_types')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+
+        if ($fileType == "prices") {
+            $category = $parseCML->getCollection('offer_prices')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+
+        if ($fileType == "propertiesGoods") {
+            $category = $parseCML->getCollection('properties_products')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+
+        if ($fileType == "propertiesOffers") {
+            $category = $parseCML->getCollection('properties_offers')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
+
+        if ($fileType == "units") {
+            $category = $parseCML->getCollection('units')->fetch();
+            $dbCategory = new Category();
+            $dbCategory->createTree1c($category);
+        }
 
         /** @var Import $model */
         $model = $this->getImportModel();
@@ -94,36 +127,16 @@ trait ImportCML{
         }
 
         try {
-            $fullPath = $this->getFullPathToFile($fileName);
-
-            if (! File::isFile($fullPath)) {
-                return $this->failure('Mode: '.$this->stepImport.', file '
-                    .$fullPath
-                    .' not exists');
-            }
-
             $ret = $model->import($fullPath);
-
             return $this->importAnalyzeModelAnswer($ret, $model);
-
         } catch (Exception $e) {
-
             return $this->failure('Mode: '.$this->stepImport
                 .", exception: {$e->getMessage()}\n"
                 ."{$e->getFile()}, {$e->getLine()}\n"
                 ."{$e->getTraceAsString()}");
-
         }
     }
 
-    /**
-     * Анализ ответа от модели обработки каталога товаров
-     *
-     * @param string                               $result
-     * @param \Mavsan\LaProtocol\Interfaces\Import $model
-     *
-     * @return string
-     */
     protected function importAnalyzeModelAnswer($result, Import $model)
     {
         $retData = explode("\n", $result);

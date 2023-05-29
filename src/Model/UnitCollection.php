@@ -6,7 +6,6 @@ namespace Timuchen\LaravelCommerceml3\Model;
 
 use Timuchen\LaravelCommerceml3\ORM\Collection;
 
-class PriceTypeCollection extends Collection
-{
+class UnitCollection extends Collection {
 
 }

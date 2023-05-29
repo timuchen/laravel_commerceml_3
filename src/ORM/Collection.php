@@ -7,7 +7,7 @@ class Collection
     /**
      * @var array $items
      */
-    protected $items = array();
+    public $items = array();
 
     /**
      * Class constructor.
@@ -16,9 +16,9 @@ class Collection
      * @return \Zenwalker\CommerceML\ORM\Collection
      */
     public function __construct($items = array())
-{
-    $this->items = $items;
-}
+    {
+        $this->items = $items;
+    }
 
     /**
      * Add item to collection.
@@ -104,7 +104,7 @@ class Collection
     }
 
     $called = get_called_class();
-    return new $called($result);
+        return new $called($result);
     }
 
     /**
@@ -137,7 +137,7 @@ class Collection
      */
     public function fetch()
     {
-    return $this->items;
+        return $this->items;
     }
 
     /**
@@ -164,13 +164,13 @@ class Collection
      */
     public function attach($collection)
     {
-    $attachMethod = 'attach'.array_pop(explode('\\', get_class($collection)));
+        $attachMethod = 'attach'.array_pop(explode('\\', get_class($collection)));
 
-    if (method_exists($this, $attachMethod)) {
+        if (method_exists($this, $attachMethod)) {
+            $this->{$attachMethod}($collection);
+        }
+
         $this->{$attachMethod}($collection);
-    }
-
-    $this->{$attachMethod}($collection);
     }
 
     /**
@@ -181,11 +181,11 @@ class Collection
      */
     public function get($id)
     {
-    if (isset($this->items[$id])) {
-        return $this->items[$id];
-    }
+        if (isset($this->items[$id])) {
+            return $this->items[$id];
+        }
 
-    return null;
+        return null;
     }
 
     /**

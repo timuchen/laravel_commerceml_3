@@ -1,14 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Timuchen\LaravelCommerceml3\Model;
 
 use Timuchen\LaravelCommerceml3\ORM\Model;
 
 class Price extends Model {
 
+    /*
+     * Product ID
+     */
     public $id;
-    public $name;
-    public $values = array();
+    public $OfferId;
+    public $type;
+    public $currency;
+    public $value;
+    public $view;
+    public $tax =[];
 
     public function __construct($importXml = null)
     {
@@ -17,50 +26,24 @@ class Price extends Model {
         }
     }
 
-    public function loadImport($xml)
+    private function loadImport($xml)
     {
+        $universalID = trim($xml->Ид);
+        $universalID = explode("#", $universalID);
+        $this->id = $universalID[0];
+        $this->OfferId = $universalID[1];
 
-        $this->id = (string) $xml->Ид;
-        $this->name = (string) $xml->Наименование;
-        $valueType = (string) $xml->ТипЗначений;
+        foreach ($xml->Цены->Цена as $price) {
 
-        if ($valueType == 'Справочник' && $xml->ВариантыЗначений) {
-            foreach ($xml->ВариантыЗначений->Справочник as $value) {
-                $id = (string) $value->ИдЗначения;
-                $this->values[$id] = (string) $value->Значение;
-            }
+            $this->type = (string)$price->ИдТипаЦены;
+            $this->currency = (string)$price->Валюта;
+            $this->value = (float)$price->ЦенаЗаЕдиницу;
+            $this->view = (string)$price->Представление;
+            $this->tax = [
+                  'tax_name' => (string) $price->Налог->Наименование,
+                  'in_amount' => (string) $price->Налог->УчтеноВСумме,
+            ];
         }
-    }
-
-    // TODO: переписать для цен
-    public function loadOffersPrice($xml)
-    {
-        if ($xml->Количество) {
-            $this->quantity = (int)$xml->Количество;
-        }
-
-        if ($xml->Цены) {
-            foreach ($xml->Цены->Цена as $price) {
-                $id = (string)$price->ИдТипаЦены;
-
-                $this->price[$id] = [
-                    'type'     => $id,
-                    'currency' => (string)$price->Валюта,
-                    'value'    => (float)$price->ЦенаЗаЕдиницу
-                ];
-            }
-        }
-    }
-
-    public function getPrice($type)
-    {
-        foreach ($this->price as $price) {
-            if ($price['type'] == $type) {
-                return $price['value'];
-            }
-        }
-
-        return 0;
     }
 
 }
