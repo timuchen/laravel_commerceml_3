@@ -29,7 +29,6 @@ class Product extends Model
     public $categories = [];
     public $requisites = [];
     public $properties = [];
-    public $propertyComplex = [];
     public $characteristics = [];
     public $imageURL =[];
 
@@ -93,9 +92,17 @@ class Product extends Model
                 if ($value) {
                     $pattern = '/[a-z0-9]{8}+-[a-z0-9]{4}+-[a-z0-9]{4}+-[a-z0-9]{4}+-[a-z0-9]{12}/';
                     if (preg_match($pattern, $value)){
-                        $this->propertyComplex[$id] = $value;
+                        $this->properties[] = [
+                            'id' => $id,
+                            'name' => '',
+                            'uuid' => $value
+                        ];
                     }else {
-                        $this->properties[$id] = $value;
+                        $this->properties[] = [
+                            'id' => $id,
+                            'name' => $value,
+                            'uuid' => ''
+                        ];
                     }
                 }
             }
@@ -104,15 +111,15 @@ class Product extends Model
 
     public function loadOffers($xml)
     {
-        $universalID = trim($xml->Ид);
+        $universalID = (string)$xml->Ид;
         $universalID = explode("#", $universalID);
         $this->id = $universalID[1];
         $this->productOfferId = $universalID[0];
 
-        $this->name        = trim($xml->Наименование);
-        $this->delete = trim($xml->ПометкаУдаления);
+        $this->name   = (string)$xml->Наименование;
+        $this->delete = (string)$xml->ПометкаУдаления;
 
-        $this->sku  = trim($xml->Артикул);
+        $this->sku  = (string)$xml->Артикул;
 
         if ($xml->ХарактеристикиТовара) {
             foreach ($xml->ХарактеристикиТовара->ХарактеристикаТовара as $value) {
@@ -137,9 +144,17 @@ class Product extends Model
                 if ($value) {
                     $pattern = '/[a-z0-9]{8}+-[a-z0-9]{4}+-[a-z0-9]{4}+-[a-z0-9]{4}+-[a-z0-9]{12}/';
                     if (preg_match($pattern, $value)){
-                        $this->propertyComplex[$id] = $value;
+                        $this->properties[] = [
+                            'id' => $id,
+                            'name' => '',
+                            'uuid' => $value
+                        ];
                     }else {
-                        $this->properties[$id] = $value;
+                        $this->properties[] = [
+                            'id' => $id,
+                            'name' => $value,
+                            'uuid' => ''
+                        ];
                     }
                 }
             }

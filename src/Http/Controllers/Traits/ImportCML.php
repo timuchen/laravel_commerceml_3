@@ -12,9 +12,6 @@ use Timuchen\LaravelCommerceml3\Interfaces\ImportBitrix;
 use Timuchen\LaravelCommerceml3\Model\FileName;
 use Timuchen\LaravelCommerceml3\CommerceML;
 
-use App\Models\Category;
-use App\Models\Product;
-
 trait ImportCML{
 
     protected function getImportModel()
@@ -75,66 +72,67 @@ trait ImportCML{
 
         if ($fileType == 'groups') {
             $category = $parseCML->getCollection('categories')->fetch();
-            $dbCategory = new Category();
+            $dbCategory = new App\Models\Category();
             $dbCategory->createTree1c($category);
         }
+
         if ($fileType == "goods") {
             $products = $parseCML->getCollection('products');
-            $dbProduct = new Product();
+            $dbProduct = new App\Models\Product();
             $dbProduct->createModel1c($products);
         }
 
         if ($fileType == "offers") {
-            $category = $parseCML->getCollection('products');
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $offers = $parseCML->getCollection('products');
+            $dbOffers = new App\Models\Offer();
+            $dbOffers->createByMl($offers);
         }
 
         if ($fileType == "priceLists") {
-            $category = $parseCML->getCollection('price_types')->fetch();
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $priceType = $parseCML->getCollection('price_types');
+            $dbPriceTipe = new App\Models\PriceType();
+            $dbPriceTipe->createByMl($priceType);
         }
 
         if ($fileType == "prices") {
-            $category = $parseCML->getCollection('offer_prices')->fetch();
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $price = $parseCML->getCollection('offer_prices')->fetch();
+            $dbPrice = new App\Models\Offer();
+            $dbPrice->setPrice1c($price);
         }
 
         if ($fileType == "propertiesGoods") {
-            $category = $parseCML->getCollection('properties_products')->fetch();
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $property = $parseCML->getCollection('properties_products');
+            $dbProperty = new App\Models\Product();
+            $dbProperty->importProperties1c($property);
         }
 
         if ($fileType == "propertiesOffers") {
-            $category = $parseCML->getCollection('properties_offers')->fetch();
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $specification = $parseCML->getCollection('properties_offers');
+            $dbSpecification = new App\Models\Offer();
+            $dbSpecification->importSpecifications1c($specification);
         }
 
         if ($fileType == "units") {
             $category = $parseCML->getCollection('units')->fetch();
-            $dbCategory = new Category();
-            $dbCategory->createTree1c($category);
+            $dbCategory = new App\Models\Product();
+            $dbCategory->createByMl($category);
         }
 
         /** @var Import $model */
-        $model = $this->getImportModel();
-        if (! $model instanceof Import) {
-            return $model;
-        }
-
-        try {
-            $ret = $model->import($fullPath);
-            return $this->importAnalyzeModelAnswer($ret, $model);
-        } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                .", exception: {$e->getMessage()}\n"
-                ."{$e->getFile()}, {$e->getLine()}\n"
-                ."{$e->getTraceAsString()}");
-        }
+//        $model = $this->getImportModel();
+//        if (! $model instanceof Import) {
+//            return $model;
+//        }
+//
+//        try {
+//            $ret = $model->import($fullPath);
+//            return $this->importAnalyzeModelAnswer($ret, $model);
+//        } catch (Exception $e) {
+//            return $this->failure('Mode: '.$this->stepImport
+//                .", exception: {$e->getMessage()}\n"
+//                ."{$e->getFile()}, {$e->getLine()}\n"
+//                ."{$e->getTraceAsString()}");
+//        }
     }
 
     protected function importAnalyzeModelAnswer($result, Import $model)

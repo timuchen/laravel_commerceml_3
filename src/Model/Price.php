@@ -28,10 +28,10 @@ class Price extends Model {
 
     private function loadImport($xml)
     {
-        $universalID = trim($xml->Ид);
+        $universalID = (string) $xml->Ид;
         $universalID = explode("#", $universalID);
-        $this->id = $universalID[0];
-        $this->OfferId = $universalID[1];
+        $this->id = $universalID[1];
+        $this->OfferId = $universalID[0];
 
         foreach ($xml->Цены->Цена as $price) {
 

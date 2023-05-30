@@ -144,13 +144,10 @@ class CommerceML {
 
     public function parsePrices($pricesXml)
     {
-
-        if ($pricesXml->ПакетПредложений->Предложения){
             foreach ($pricesXml->ПакетПредложений->Предложения->Предложение as $xmlPrice){
                 $price = new Price($xmlPrice);
                 $this->getCollection('offer_prices')->add($price);
             }
-        }
     }
 
     public function parseUnits($unitsXml){
