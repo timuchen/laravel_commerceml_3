@@ -276,6 +276,33 @@ class CatalogController extends BaseController
      */
     protected function getFile()
     {
+        if (strpos($this->request->input('filename'), '.jpg')){
+            $filePuth = $this->fileImage($this->request->input('filename'));
+            $folderName = $filePuth["dirname"];
+            $fileName = $filePuth["basename"];
+
+            $Path = config('configExchange1C.imagesPath').
+                DIRECTORY_SEPARATOR.
+                $folderName;
+
+            if (! File::isDirectory($Path)) {
+                File::makeDirectory($Path, 0755, true);
+            }
+
+            $fData = $this->getFileGetData();
+
+            $fullPath = $Path.DIRECTORY_SEPARATOR.$fileName;
+
+            if ($file = fopen($fullPath, 'ab')) {
+                $dataLen = mb_strlen($fData, 'latin1');
+                $result = fwrite($file, $fData);
+            }
+
+            if ($result === $dataLen) {
+                return $this->success();
+            }
+        }
+
         $modelFileName = new FileName($this->request->input('filename'));
         $fileName = $modelFileName->getFileName();
 
@@ -285,6 +312,7 @@ class CatalogController extends BaseController
         }
 
         $fullPath = $this->getFullPathToFile($fileName, true);
+
 
         $fData = $this->getFileGetData();
 
@@ -319,6 +347,11 @@ class CatalogController extends BaseController
         }
 
         return $this->failure('Mode: '.$this->stepFile.', unexpected error.');
+    }
+
+    protected function fileImage($imagePath){
+        $path = pathinfo($imagePath);
+        return $path;
     }
 
     /**

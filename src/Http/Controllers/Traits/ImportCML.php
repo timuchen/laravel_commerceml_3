@@ -28,7 +28,7 @@ trait ImportCML{
         if (! $model instanceof Import) {
             return $this->failure('Mode: '.$this->stepImport.' model '
                 .$modelCLass
-                .' must implement \Mavsan\LaProtocol\Interfaces\Import');
+                .' must implement \Interfaces\Import');
         }
 
         return $model;
@@ -51,6 +51,7 @@ trait ImportCML{
 
         // проверка валидности имени файла
         $fileName = $this->importGetFileName($this->request->get('filename'));
+
         if (empty($fileName)) {
             return $this->failure('Mode: '.$this->stepImport
                 .' wrong file name: '

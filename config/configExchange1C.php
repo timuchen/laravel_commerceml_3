@@ -6,6 +6,7 @@ return [
 
     '1cRouteNameCatalog' => 'api/1cexc',
     'inputPath'          => storage_path('app/1c_exchange'),
+    'imagesPath'         => storage_path('app/public/images'),
 
     'use_zip'            => true,
     'maxFileSize'        => 10 * 1000 * 1024,
@@ -35,5 +36,5 @@ return [
 
     'isBitrixOn1C'       => true,
     'saleXmlVersion'     => '2.03',
-    'catalogXmlVersion'  => '2.08',
+    'catalogXmlVersion'  => '3.1',
 ];
