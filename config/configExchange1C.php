@@ -7,6 +7,7 @@ return [
     '1cRouteNameCatalog' => 'api/1cexc',
     'inputPath'          => storage_path('app/1c_exchange'),
     'imagesPath'         => storage_path('app/public/images'),
+    'imagesFormat'       => '.jpg',
 
     'use_zip'            => true,
     'maxFileSize'        => 10 * 1000 * 1024,

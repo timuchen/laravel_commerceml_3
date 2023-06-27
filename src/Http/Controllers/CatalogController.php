@@ -276,7 +276,8 @@ class CatalogController extends BaseController
      */
     protected function getFile()
     {
-        if (strpos($this->request->input('filename'), '.jpg')){
+        //изображения не перезаписываются. Если файл существует: success
+        if (strpos($this->request->input('filename'), config('configExchange1C.imagesFormat'))){
             $filePuth = $this->fileImage($this->request->input('filename'));
             $folderName = $filePuth["dirname"];
             $fileName = $filePuth["basename"];
@@ -296,11 +297,14 @@ class CatalogController extends BaseController
             if ($file = fopen($fullPath, 'ab')) {
                 $dataLen = mb_strlen($fData, 'latin1');
                 $result = fwrite($file, $fData);
+                if ($result === $dataLen) {
+                    return $this->success();
+                }
+            } else {
+                return $this->failure('Mode: '.$this->stepFile.', cant open file: '
+                    .$fullPath.' to write.');
             }
 
-            if ($result === $dataLen) {
-                return $this->success();
-            }
         }
 
         $modelFileName = new FileName($this->request->input('filename'));
