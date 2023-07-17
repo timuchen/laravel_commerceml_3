@@ -75,56 +75,49 @@ trait ImportCML{
             $category = $parseCML->getCollection('categories')->fetch();
             $dbCategory = new App\Models\Category();
             $dbCategory->createTree1c($category);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "goods") {
             $products = $parseCML->getCollection('products');
             $dbProduct = new App\Models\Product();
             $dbProduct->createModel1c($products);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "offers") {
             $offers = $parseCML->getCollection('products');
             $dbOffers = new App\Models\Offer();
             $dbOffers->createByMl($offers);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "priceLists") {
             $priceType = $parseCML->getCollection('price_types');
             $dbPriceTipe = new App\Models\PriceType();
             $dbPriceTipe->createByMl($priceType);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "prices") {
             $price = $parseCML->getCollection('offer_prices')->fetch();
             $dbPrice = new App\Models\Offer();
             $dbPrice->setPrice1c($price);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "propertiesGoods") {
             $property = $parseCML->getCollection('properties_products');
             $dbProperty = new App\Models\Product();
             $dbProperty->importProperties1c($property);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "propertiesOffers") {
             $specification = $parseCML->getCollection('properties_offers');
             $dbSpecification = new App\Models\Offer();
             $dbSpecification->importSpecifications1c($specification);
-            return $this->answer('Ok');
         }
 
         if ($fileType == "units") {
             $requisite = $parseCML->getCollection('units')->fetch();
             $dbRequisite = new App\Models\Product();
             $dbRequisite->importRequisite1c($requisite);
-            return $this->answer('success');
+            //return $this->answer('success');
         }
 
         /** @var Import $model */
