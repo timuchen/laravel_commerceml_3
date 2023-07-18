@@ -2,6 +2,7 @@
 
 namespace Timuchen\LaravelCommerceml3;
 
+use Illuminate\Support\Facades\Storage;
 use Timuchen\LaravelCommerceml3\Model\Category;
 use Timuchen\LaravelCommerceml3\Model\CategoryCollection;
 use Timuchen\LaravelCommerceml3\Model\Product;
@@ -12,6 +13,7 @@ use Timuchen\LaravelCommerceml3\Model\Property;
 use Timuchen\LaravelCommerceml3\Model\PropertyCollection;
 use Timuchen\LaravelCommerceml3\Model\Price;
 use Timuchen\LaravelCommerceml3\Model\PriceCollection;
+use Timuchen\LaravelCommerceml3\Model\Rest;
 use Timuchen\LaravelCommerceml3\Model\Unit;
 use Timuchen\LaravelCommerceml3\Model\UnitCollection;
 
@@ -28,6 +30,8 @@ class CommerceML {
             'properties_products'   => new PropertyCollection(),
             'properties_offers'     => new PropertyCollection(),
             'units'          => new UnitCollection(),
+            'rests'          => new Rest(),
+            'storages'       => new Storage(),
         ];
     }
 

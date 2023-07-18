@@ -127,6 +127,20 @@ trait ImportCML{
             return $this->success();
         }
 
+        if ($fileType == "rests") {
+            $requisite = $parseCML->getCollection('rests')->fetch();
+            $dbRequisite = new App\Models\Product();
+            $dbRequisite->importRest1c($requisite);
+            return $this->success();
+        }
+
+        if ($fileType == "storages") {
+            $requisite = $parseCML->getCollection('storages')->fetch();
+            $dbRequisite = new App\Models\Product();
+            $dbRequisite->importStorage1c($requisite);
+            return $this->success();
+        }
+
         /** @var Import $model */
 //        $model = $this->getImportModel();
 //        if (! $model instanceof Import) {
