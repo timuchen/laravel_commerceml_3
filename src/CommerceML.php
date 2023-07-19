@@ -2,7 +2,6 @@
 
 namespace Timuchen\LaravelCommerceml3;
 
-use Illuminate\Support\Facades\Storage;
 use Timuchen\LaravelCommerceml3\Model\Category;
 use Timuchen\LaravelCommerceml3\Model\CategoryCollection;
 use Timuchen\LaravelCommerceml3\Model\Product;
@@ -14,6 +13,9 @@ use Timuchen\LaravelCommerceml3\Model\PropertyCollection;
 use Timuchen\LaravelCommerceml3\Model\Price;
 use Timuchen\LaravelCommerceml3\Model\PriceCollection;
 use Timuchen\LaravelCommerceml3\Model\Rest;
+use Timuchen\LaravelCommerceml3\Model\RestCollection;
+use Timuchen\LaravelCommerceml3\Model\Storage;
+use Timuchen\LaravelCommerceml3\Model\StorageCollection;
 use Timuchen\LaravelCommerceml3\Model\Unit;
 use Timuchen\LaravelCommerceml3\Model\UnitCollection;
 
@@ -30,8 +32,8 @@ class CommerceML {
             'properties_products'   => new PropertyCollection(),
             'properties_offers'     => new PropertyCollection(),
             'units'          => new UnitCollection(),
-            'rests'          => new Rest(),
-            'storages'       => new Storage(),
+            'rests'          => new RestCollection(),
+            'storages'       => new StorageCollection(),
         ];
     }
 
@@ -79,6 +81,31 @@ class CommerceML {
             $this->parseUnits($fileXML);
         }
 
+        if ($fileType == "rests") {
+            $fileXML = $this->loadXml($filePuth);
+            $this->parseRests($fileXML);
+        }
+
+        if ($fileType == "storages") {
+            $fileXML = $this->loadXml($filePuth);
+            $this->parseStorages($fileXML);
+        }
+
+    }
+
+    public function parseStorages($storagesXml)
+    {
+        if ($storagesXml->Классификатор->Склады) {
+            foreach ($storagesXml->Классификатор->Склады->Склад as $xmlStorage) {
+                $store = new Storage($xmlStorage);
+                $this->getCollection('storages')->add($store);
+            }
+        }
+    }
+
+    public function parseRests($rests)
+    {
+        //
     }
 
     public function parseCategories($groupsXml, $parent = null)

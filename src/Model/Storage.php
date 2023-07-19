@@ -11,7 +11,7 @@ class Storage extends Model
     public $id;
     public string $name;
     public string $version;
-    public bool $delete;
+    public string $delete;
 
     public function __construct($importXml = 0)
     {
@@ -22,9 +22,9 @@ class Storage extends Model
 
     public function loadImport($xml)
     {
-        $this->id = $xml->Ид;
+        $this->id = (string) $xml->Ид;
         $this->name = (string) $xml->Наименование;
         $this->version = (string) $xml->НомерВерсии;
-        $this->delete = (bool) $xml->ПометкаУдаления;
+        $this->delete = (string) $xml->ПометкаУдаления;
     }
 }

@@ -4,6 +4,7 @@ namespace Timuchen\LaravelCommerceml3\Model;
 
 use Timuchen\LaravelCommerceml3\ORM\Collection;
 
-class StorageCollection extends Collection {
+class StorageCollection extends Collection
+{
 
 }

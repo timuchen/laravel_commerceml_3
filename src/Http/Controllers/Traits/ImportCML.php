@@ -128,17 +128,17 @@ trait ImportCML{
         }
 
         if ($fileType == "rests") {
-            $requisite = $parseCML->getCollection('rests')->fetch();
-            $dbRequisite = new App\Models\Product();
-            $dbRequisite->importRest1c($requisite);
-            return $this->success();
+            $rests = $parseCML->getCollection('rests')->fetch();
+            $dbRest = new App\Models\Offer();
+            $dbRest->importRest1c($rests);
+            return $dbRest;
         }
 
         if ($fileType == "storages") {
-            $requisite = $parseCML->getCollection('storages')->fetch();
-            $dbRequisite = new App\Models\Product();
-            $dbRequisite->importStorage1c($requisite);
-            return $this->success();
+            $storages = $parseCML->getCollection('storages');
+            $dbStore = new App\Models\Offer();
+            $dbStore->importStorage1c($storages);
+            return $dbStore;
         }
 
         /** @var Import $model */
