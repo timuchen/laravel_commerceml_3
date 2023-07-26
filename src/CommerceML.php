@@ -41,53 +41,45 @@ class CommerceML {
     {
         $fileType = stristr($fileName, "_", true);
 
+        $fileXML = $this->loadXml($filePuth);
+
         if ($fileType == "groups") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseCategories($fileXML);
         }
 
-        if ($fileType == "goods") {
-            $fileXML = $this->loadXml($filePuth);
+        if ($fileType == "goods") {;
             $this->parseProducts($fileXML, false);
         }
 
         if ($fileType == "offers") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseProducts(false, $fileXML);
         }
 
         if ($fileType == "priceLists") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parsePriceTypes($fileXML);
         }
 
         if ($fileType == "prices") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parsePrices($fileXML);
         }
 
         if ($fileType == "propertiesGoods") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseProperties($fileXML, false);
         }
 
         if ($fileType == "propertiesOffers") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseProperties(false, $fileXML);
         }
 
         if ($fileType == "units") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseUnits($fileXML);
         }
 
         if ($fileType == "rests") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseRests($fileXML);
         }
 
         if ($fileType == "storages") {
-            $fileXML = $this->loadXml($filePuth);
             $this->parseStorages($fileXML);
         }
 
@@ -103,9 +95,14 @@ class CommerceML {
         }
     }
 
-    public function parseRests($rests)
+    public function parseRests($restsXml)
     {
-        //
+        if ($restsXml->ПакетПредложений->Предложения) {
+            foreach ($restsXml->ПакетПредложений->Предложения->Предложение as $xmlRests) {
+                $rest = new Rest($xmlRests);
+                $this->getCollection('rests')->add($rest);
+            }
+        }
     }
 
     public function parseCategories($groupsXml, $parent = null)

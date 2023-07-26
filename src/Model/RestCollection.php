@@ -7,4 +7,5 @@ use Timuchen\LaravelCommerceml3\ORM\Collection;
 class RestCollection extends Collection
 {
 
+
 }

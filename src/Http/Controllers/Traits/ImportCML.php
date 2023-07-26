@@ -131,14 +131,14 @@ trait ImportCML{
             $rests = $parseCML->getCollection('rests')->fetch();
             $dbRest = new App\Models\Offer();
             $dbRest->importRest1c($rests);
-            return $dbRest;
+            return $this->success();
         }
 
         if ($fileType == "storages") {
             $storages = $parseCML->getCollection('storages');
             $dbStore = new App\Models\Offer();
             $dbStore->importStorage1c($storages);
-            return $dbStore;
+            return $this->success();
         }
 
         /** @var Import $model */

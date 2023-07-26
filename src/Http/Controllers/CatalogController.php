@@ -412,13 +412,13 @@ class CatalogController extends BaseController
      */
     protected function clearInputPath($currentFolder)
     {
-//        $storePath = config('configExchange1C.inputPath');
-//
-//        foreach (File::directories($storePath) as $path) {
-//            if (File::basename($path) != $currentFolder) {
-//                File::deleteDirectory($path);
-//            }
-//        }
+        $storePath = config('configExchange1C.inputPath');
+
+        foreach (File::directories($storePath) as $path) {
+            if (File::basename($path) != $currentFolder) {
+                File::deleteDirectory($path);
+            }
+        }
     }
 
     /**
