@@ -41,12 +41,14 @@ trait ImportCML{
      */
     protected function import()
     {
-        $unZip = $this->unzipIfNeed();
+        if (config('configExchange1C.use_zip', true)) {
+            $unZip = $this->unzipIfNeed();
 
-        if ($unZip == 'more') {
-            return $this->answer('progress');
-        } elseif (! empty($unZip)) {
-            return $this->failure('Mode: '.$this->stepImport.' '.$unZip);
+            if ($unZip == 'more') {
+                return $this->answer('progress');
+            } elseif (! empty($unZip)) {
+                return $this->failure('Mode: '.$this->stepImport.' '.$unZip);
+            }
         }
 
         // проверка валидности имени файла
@@ -187,24 +189,21 @@ trait ImportCML{
      */
     protected function importDeactivate($dateTime)
     {
-        //TODO подключить деактивацию после доработки модели.
-        return $this->success();
+        try {
+            $model = $this->getImportModel();
+            if ($model instanceof ImportBitrix) {
+                $ret = $model->modeDeactivate($dateTime);
 
-//        try {
-//            $model = $this->getImportModel();
-//            if ($model instanceof ImportBitrix) {
-//                $ret = $model->modeDeactivate($dateTime);
-//
-//                return $this->importAnalyzeModelAnswer($ret, $model);
-//            }
-//
-//            return $model::answerSuccess;
-//        } catch (Exception $e) {
-//            return $this->failure('Mode: '.$this->stepImport
-//                .", exception: {$e->getMessage()}\n"
-//                ."{$e->getFile()}, {$e->getLine()}\n"
-//                ."{$e->getTraceAsString()}");
-//        }
+                return $this->importAnalyzeModelAnswer($ret, $model);
+            }
+
+            return $model::answerSuccess;
+        } catch (Exception $e) {
+            return $this->failure('Mode: '.$this->stepImport
+                .", exception: {$e->getMessage()}\n"
+                ."{$e->getFile()}, {$e->getLine()}\n"
+                ."{$e->getTraceAsString()}");
+        }
     }
 
     /**
@@ -213,25 +212,22 @@ trait ImportCML{
      */
     protected function importComplete()
     {
-        //TODO подключить деактивацию после доработки модели.
-        return $this->success();
+        try {
+            $model = $this->getImportModel();
 
-//        try {
-//            $model = $this->getImportModel();
-//
-//            if ($model instanceof ImportBitrix) {
-//                $ret = $model->modeComplete();
-//
-//                return $this->importAnalyzeModelAnswer($ret, $model);
-//            }
-//
-//            return $model::answerSuccess;
-//        } catch (Exception $e) {
-//            return $this->failure('Mode: '.$this->stepImport
-//                .", exception: {$e->getMessage()}\n"
-//                ."{$e->getFile()}, {$e->getLine()}\n"
-//                ."{$e->getTraceAsString()}");
-//        }
+            if ($model instanceof ImportBitrix) {
+                $ret = $model->modeComplete();
+
+                return $this->importAnalyzeModelAnswer($ret, $model);
+            }
+
+            return $model::answerSuccess;
+        } catch (Exception $e) {
+            return $this->failure('Mode: '.$this->stepImport
+                .", exception: {$e->getMessage()}\n"
+                ."{$e->getFile()}, {$e->getLine()}\n"
+                ."{$e->getTraceAsString()}");
+        }
     }
 
     /**

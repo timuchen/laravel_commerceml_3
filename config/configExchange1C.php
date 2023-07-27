@@ -9,7 +9,7 @@ return [
     'imagesPath'         => storage_path('app/public/images'),
     'imagesFormat'       => '.jpg',
 
-    'use_zip'            => true,
+    'use_zip'            => false,
     'maxFileSize'        => 10 * 1000 * 1024,
 
     'filesToSendTest'    => [],
@@ -21,7 +21,7 @@ return [
     'catalogWorkModel'   => '',
     'saleShareModel'     => '',
 
-    'encodeToWindows1251' => true,
+    'encodeToWindows1251' => false,
 
     'saleShareToXML'     => '',
 
