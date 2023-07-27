@@ -187,21 +187,24 @@ trait ImportCML{
      */
     protected function importDeactivate($dateTime)
     {
-        try {
-            $model = $this->getImportModel();
-            if ($model instanceof ImportBitrix) {
-                $ret = $model->modeDeactivate($dateTime);
+        //TODO подключить деактивацию после доработки модели.
+        return $this->success();
 
-                return $this->importAnalyzeModelAnswer($ret, $model);
-            }
-
-            return $model::answerSuccess;
-        } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                .", exception: {$e->getMessage()}\n"
-                ."{$e->getFile()}, {$e->getLine()}\n"
-                ."{$e->getTraceAsString()}");
-        }
+//        try {
+//            $model = $this->getImportModel();
+//            if ($model instanceof ImportBitrix) {
+//                $ret = $model->modeDeactivate($dateTime);
+//
+//                return $this->importAnalyzeModelAnswer($ret, $model);
+//            }
+//
+//            return $model::answerSuccess;
+//        } catch (Exception $e) {
+//            return $this->failure('Mode: '.$this->stepImport
+//                .", exception: {$e->getMessage()}\n"
+//                ."{$e->getFile()}, {$e->getLine()}\n"
+//                ."{$e->getTraceAsString()}");
+//        }
     }
 
     /**
@@ -210,22 +213,25 @@ trait ImportCML{
      */
     protected function importComplete()
     {
-        try {
-            $model = $this->getImportModel();
+        //TODO подключить деактивацию после доработки модели.
+        return $this->success();
 
-            if ($model instanceof ImportBitrix) {
-                $ret = $model->modeComplete();
-
-                return $this->importAnalyzeModelAnswer($ret, $model);
-            }
-
-            return $model::answerSuccess;
-        } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                .", exception: {$e->getMessage()}\n"
-                ."{$e->getFile()}, {$e->getLine()}\n"
-                ."{$e->getTraceAsString()}");
-        }
+//        try {
+//            $model = $this->getImportModel();
+//
+//            if ($model instanceof ImportBitrix) {
+//                $ret = $model->modeComplete();
+//
+//                return $this->importAnalyzeModelAnswer($ret, $model);
+//            }
+//
+//            return $model::answerSuccess;
+//        } catch (Exception $e) {
+//            return $this->failure('Mode: '.$this->stepImport
+//                .", exception: {$e->getMessage()}\n"
+//                ."{$e->getFile()}, {$e->getLine()}\n"
+//                ."{$e->getTraceAsString()}");
+//        }
     }
 
     /**
@@ -239,7 +245,7 @@ trait ImportCML{
         $files = session('inputZipped', []);
 
         if (empty($files)) {
-            return '';
+            return $this->failure('File not loaded');
         }
 
         $file = array_shift($files);
@@ -248,7 +254,6 @@ trait ImportCML{
 
         try {
             $zip = new ZipArchive();
-
             if ($zip->open($file) !== true) {
                 return 'Error opening zipped: '.$file;
             }
@@ -256,14 +261,11 @@ trait ImportCML{
             return 'Error opening zipped: '.$e->getMessage();
         }
 
-        $path =
-            config('protocolExchange1C.inputPath').'/'.$this->checkInputPath();
+        $path = config('protocolExchange1C.inputPath').'/'.$this->checkInputPath();
 
         $zip->extractTo($path);
         $zip->close();
-
         File::delete($file);
-
         return 'more';
     }
 
