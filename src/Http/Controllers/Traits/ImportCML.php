@@ -189,21 +189,22 @@ trait ImportCML{
      */
     protected function importDeactivate($dateTime)
     {
-        try {
-            $model = $this->getImportModel();
-            if ($model instanceof ImportBitrix) {
-                $ret = $model->modeDeactivate($dateTime);
-
-                return $this->importAnalyzeModelAnswer($ret, $model);
-            }
-
-            return $model::answerSuccess;
-        } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                .", exception: {$e->getMessage()}\n"
-                ."{$e->getFile()}, {$e->getLine()}\n"
-                ."{$e->getTraceAsString()}");
-        }
+        return $this->success();
+//        try {
+//            $model = $this->getImportModel();
+//            if ($model instanceof ImportBitrix) {
+//                $ret = $model->modeDeactivate($dateTime);
+//
+//                return $this->importAnalyzeModelAnswer($ret, $model);
+//            }
+//
+//            return $model::answerSuccess;
+//        } catch (Exception $e) {
+//            return $this->failure('Mode: '.$this->stepImport
+//                .", exception: {$e->getMessage()}\n"
+//                ."{$e->getFile()}, {$e->getLine()}\n"
+//                ."{$e->getTraceAsString()}");
+//        }
     }
 
     /**
@@ -212,22 +213,23 @@ trait ImportCML{
      */
     protected function importComplete()
     {
-        try {
-            $model = $this->getImportModel();
-
-            if ($model instanceof ImportBitrix) {
-                $ret = $model->modeComplete();
-
-                return $this->importAnalyzeModelAnswer($ret, $model);
-            }
-
-            return $model::answerSuccess;
-        } catch (Exception $e) {
-            return $this->failure('Mode: '.$this->stepImport
-                .", exception: {$e->getMessage()}\n"
-                ."{$e->getFile()}, {$e->getLine()}\n"
-                ."{$e->getTraceAsString()}");
-        }
+        return $this->success();
+//        try {
+//            $model = $this->getImportModel();
+//
+//            if ($model instanceof ImportBitrix) {
+//                $ret = $model->modeComplete();
+//
+//                return $this->importAnalyzeModelAnswer($ret, $model);
+//            }
+//
+//            return $model::answerSuccess;
+//        } catch (Exception $e) {
+//            return $this->failure('Mode: '.$this->stepImport
+//                .", exception: {$e->getMessage()}\n"
+//                ."{$e->getFile()}, {$e->getLine()}\n"
+//                ."{$e->getTraceAsString()}");
+//        }
     }
 
     /**
